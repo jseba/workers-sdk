@@ -222,27 +222,28 @@ const parseResponseSchemaV4 = <T>(
 	responseHeader: string | undefined,
 	responseBody: any
 ): ApiResult => {
-	const fetchResult = responseBody as FetchResult<T>;
+	const fetchResult =
+		(typeof responseBody === "object"
+		? responseBody
+		: JSON.parse(responseBody)) as FetchResult<T>;
 	const ok = response.ok && fetchResult.success;
-	console.log(`${JSON.stringify(fetchResult)}`);
-	let result: T | undefined;
-	let error: FetchResponseInfo | undefined;
-	if (ok && fetchResult.result !== undefined) {
-		result = fetchResult.result;
-	} else {
-		if (fetchResult.errors !== undefined) {
-			error = fetchResult.errors[0];
+	let result: any;
+	if (ok) {
+		if (fetchResult.result !== undefined) {
+			result = fetchResult.result;
 		} else {
-			console.log("no errors");
+			result = {};
 		}
+	} else {
+		result = { error: fetchResult.errors?.[0].message };
+		// result = fetchResult.result;
 	}
-
 	return {
 		url,
 		ok,
 		status: response.status,
 		statusText: response.statusText,
-		body: responseHeader ?? ok ? result : error,
+		body: responseHeader ?? JSON.stringify(result ?? {}),
 	};
 };
 

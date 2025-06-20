@@ -172,9 +172,7 @@ describe("cloudchamber curl", () => {
 		);
 		expect(std.err).toMatchInlineSnapshot(`""`);
 		expect(std.out).toMatchInlineSnapshot(`
-			"├ Loading account
-			│
-			>> Body
+			">> Body
 			[
 			    {
 			        \\"id\\": \\"1\\",

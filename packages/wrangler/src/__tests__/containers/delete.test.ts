@@ -71,11 +71,7 @@ describe("containers delete", () => {
 		`);
 		expect(stdCli.stderr).toMatchInlineSnapshot(`""`);
 		expect(stdCli.stdout).toMatchInlineSnapshot(`
-			"├ Loading account
-			│
-			├ Loading account
-			│
-			╭ Delete your container
+			"╭ Delete your container
 			│
 			"
 		`);
@@ -91,7 +87,8 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse(`{"success": false, "errors": []}`, {
+					return new HttpResponse(`{"success": false, "errors": [{"code": 1000, "message": "something happened"}]}`, {
+						type: "applicaton/json",
 						status: 500,
 					});
 				},
@@ -101,15 +98,11 @@ describe("containers delete", () => {
 		await expect(runWrangler(`containers delete ${testContainerID}`)).rejects
 			.toMatchInlineSnapshot(`
 			[Error: There has been an unknown error deleting the container.
-			"{/"error/": /"something happened/"}"]
+			"{/"error/":/"something happened/"}"]
 		`);
 		expect(stdCli.stderr).toMatchInlineSnapshot(`""`);
 		expect(stdCli.stdout).toMatchInlineSnapshot(`
-			"├ Loading account
-			│
-			├ Loading account
-			│
-			╭ Delete your container
+			"╭ Delete your container
 			│
 			"
 		`);
@@ -122,7 +115,7 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse("{}");
+					return new HttpResponse(`{"success": true, "result": {}}`, {type: "application/json"});
 				},
 				{ once: true }
 			)
@@ -130,11 +123,7 @@ describe("containers delete", () => {
 		await runWrangler(`containers delete ${testContainerID}`);
 		expect(stdCli.stderr).toMatchInlineSnapshot(`""`);
 		expect(stdCli.stdout).toMatchInlineSnapshot(`
-			"├ Loading account
-			│
-			├ Loading account
-			│
-			╭ Delete your container
+			"╭ Delete your container
 			│
 			╰ Your container has been deleted
 
@@ -150,7 +139,10 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse("{success: true, result: {}}");
+					return new HttpResponse(`{"success": true, "result": {}}`, {
+						type: "applicaton/json",
+					}
+										   );
 				},
 				{ once: true }
 			)

@@ -38,8 +38,6 @@ export async function deleteCommand(
 		throw new Error(
 			"You must provide an ID. Use 'wrangler containers list` to view your containers."
 		);
-	} else if (!isValidContainerID(deleteArgs.ID)) {
-		throw new UserError("ID must be a UUID");
 	}
 
 	if (deleteArgs.json) {
