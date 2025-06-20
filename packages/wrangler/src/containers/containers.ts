@@ -9,7 +9,7 @@ import { processArgument } from "@cloudflare/cli/args";
 import { dim, gray } from "@cloudflare/cli/colors";
 import { inputPrompt, spinner } from "@cloudflare/cli/interactive";
 import { ApiError, ApplicationsService } from "@cloudflare/containers-shared";
-import { loadAccountSpinner } from "../cloudchamber/common";
+import { isValidContainerID, loadAccountSpinner } from "../cloudchamber/common";
 import { wrap } from "../cloudchamber/helpers/wrap";
 import { UserError } from "../errors";
 import isInteractive from "../is-interactive";
@@ -34,11 +34,12 @@ export async function deleteCommand(
 	deleteArgs: StrictYargsOptionsToInterfaceJSON<typeof deleteYargs>,
 	_config: Config
 ) {
-	await loadAccountSpinner(deleteArgs);
 	if (!deleteArgs.ID) {
 		throw new Error(
 			"You must provide an ID. Use 'wrangler containers list` to view your containers."
 		);
+	} else if (!isValidContainerID(deleteArgs.ID)) {
+		throw new UserError("ID must be a UUID");
 	}
 
 	if (deleteArgs.json) {

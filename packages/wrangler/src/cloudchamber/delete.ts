@@ -3,7 +3,11 @@ import { inputPrompt } from "@cloudflare/cli/interactive";
 import { DeploymentsService } from "@cloudflare/containers-shared";
 import { UserError } from "../errors";
 import { logDeployment, pickDeployment } from "./cli/deployments";
-import { interactWithUser, loadAccountSpinner } from "./common";
+import {
+	interactWithUser,
+	isValidContainerID,
+	loadAccountSpinner,
+} from "./common";
 import { wrap } from "./helpers/wrap";
 import type { Config } from "../config";
 import type {
@@ -31,6 +35,8 @@ export async function deleteCommand(
 			throw new Error(
 				"there needs to be a deploymentId when you can't interact with the wrangler cli"
 			);
+		} else if (!isValidContainerID(deleteArgs.deploymentId)) {
+			throw new UserError("deploymentId must be a UUID");
 		}
 
 		const deployment = await DeploymentsService.deleteDeploymentV2(

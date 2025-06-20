@@ -7,6 +7,8 @@ import { useMockIsTTY } from "../helpers/mock-istty";
 import { msw } from "../helpers/msw";
 import { runWrangler } from "../helpers/run-wrangler";
 
+const testContainerID = "6925adea-c4ad-4aa6-bffd-d26783e9afbb";
+
 describe("containers delete", () => {
 	const stdCli = mockCLIOutput();
 
@@ -52,14 +54,17 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse(`{"error": "something happened"}`, {
-						status: code,
-					});
+					return new HttpResponse(
+						`{"success": false, "errors": [{"code": 1000, "message": "something happened"}]}`,
+						{
+							status: code,
+						}
+					);
 				},
 				{ once: true }
 			)
 		);
-		await expect(runWrangler("containers delete 123")).rejects
+		await expect(runWrangler(`containers delete ${testContainerID}`)).rejects
 			.toMatchInlineSnapshot(`
 			[Error: There has been an error deleting the container.
 			something happened]
@@ -86,14 +91,14 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse(`{"error": "something happened"}`, {
+					return new HttpResponse(`{"success": false, "errors": []}`, {
 						status: 500,
 					});
 				},
 				{ once: true }
 			)
 		);
-		await expect(runWrangler("containers delete 123")).rejects
+		await expect(runWrangler(`containers delete ${testContainerID}`)).rejects
 			.toMatchInlineSnapshot(`
 			[Error: There has been an unknown error deleting the container.
 			"{/"error/": /"something happened/"}"]
@@ -122,7 +127,7 @@ describe("containers delete", () => {
 				{ once: true }
 			)
 		);
-		await runWrangler("containers delete 123");
+		await runWrangler(`containers delete ${testContainerID}`);
 		expect(stdCli.stderr).toMatchInlineSnapshot(`""`);
 		expect(stdCli.stdout).toMatchInlineSnapshot(`
 			"├ Loading account
@@ -145,12 +150,12 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse("{}");
+					return new HttpResponse("{success: true, result: {}}");
 				},
 				{ once: true }
 			)
 		);
-		await runWrangler("containers delete --json asdf");
+		await runWrangler(`containers delete --json ${testContainerID}`);
 		expect(std.err).toMatchInlineSnapshot(`""`);
 		expect(std.out).toMatchInlineSnapshot(`"\\"{}\\""`);
 	});
@@ -163,15 +168,21 @@ describe("containers delete", () => {
 				"*/applications/*",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse(JSON.stringify({ error: "Not Found" }), {
-						status: 404,
-					});
+					return new HttpResponse(
+						JSON.stringify({
+							success: false,
+							errors: [{ code: 1000, message: "Not Found" }],
+						}),
+						{
+							status: 404,
+						}
+					);
 				},
 				{ once: true }
 			)
 		);
 		expect(std.err).toMatchInlineSnapshot(`""`);
-		await runWrangler("containers delete --json nope");
+		await runWrangler(`containers delete --json ${testContainerID}`);
 		expect(std.out).toMatchInlineSnapshot(
 			`"\\"{/\\"error/\\":/\\"Not Found/\\"}\\""`
 		);
