@@ -335,8 +335,7 @@ describe("cloudchamber curl", () => {
 			"cloudchamber curl /deployments/v2 --header something:here"
 		);
 		expect(std.err).toMatchInlineSnapshot(`""`);
-		const text = std.out.split("\n").splice(2).join("\n");
-		const response = JSON.parse(text);
+		const response = JSON.parse(std.out);
 		expect(response.status).toEqual(500);
 		expect(response.statusText).toEqual("Unhandled Exception");
 	});

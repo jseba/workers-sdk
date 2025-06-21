@@ -68,9 +68,8 @@ export async function deleteCommand(
 	if (err) {
 		if (err instanceof ApiError) {
 			if (err.status === 400 || err.status === 404) {
-				const body = JSON.parse(err.body);
 				throw new UserError(
-					`There has been an error deleting the container.\n${body.error}`
+					`There has been an error deleting the container.\n${err.body.error}`
 				);
 			}
 

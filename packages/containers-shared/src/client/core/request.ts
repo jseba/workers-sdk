@@ -236,14 +236,13 @@ const parseResponseSchemaV4 = <T>(
 		}
 	} else {
 		result = { error: fetchResult.errors?.[0].message };
-		// result = fetchResult.result;
 	}
 	return {
 		url,
 		ok,
 		status: response.status,
 		statusText: response.statusText,
-		body: responseHeader ?? JSON.stringify(result ?? {}),
+		body: responseHeader ?? result,
 	};
 };
 

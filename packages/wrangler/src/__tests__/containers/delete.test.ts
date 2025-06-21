@@ -54,7 +54,7 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse(
+					return HttpResponse.json(
 						`{"success": false, "errors": [{"code": 1000, "message": "something happened"}]}`,
 						{
 							status: code,
@@ -98,7 +98,7 @@ describe("containers delete", () => {
 		await expect(runWrangler(`containers delete ${testContainerID}`)).rejects
 			.toMatchInlineSnapshot(`
 			[Error: There has been an unknown error deleting the container.
-			"{/"error/":/"something happened/"}"]
+			{"error":"something happened"}]
 		`);
 		expect(stdCli.stderr).toMatchInlineSnapshot(`""`);
 		expect(stdCli.stdout).toMatchInlineSnapshot(`
@@ -139,17 +139,14 @@ describe("containers delete", () => {
 				"*/applications/:id",
 				async ({ request }) => {
 					expect(await request.text()).toEqual("");
-					return new HttpResponse(`{"success": true, "result": {}}`, {
-						type: "applicaton/json",
-					}
-										   );
+					return HttpResponse.json(`{"success": true, "result": {}}`);
 				},
 				{ once: true }
 			)
 		);
 		await runWrangler(`containers delete --json ${testContainerID}`);
 		expect(std.err).toMatchInlineSnapshot(`""`);
-		expect(std.out).toMatchInlineSnapshot(`"\\"{}\\""`);
+		expect(std.out).toMatchInlineSnapshot(`"{}"`);
 	});
 
 	it("should error when trying to delete a non-existant container (json)", async () => {
@@ -176,7 +173,7 @@ describe("containers delete", () => {
 		expect(std.err).toMatchInlineSnapshot(`""`);
 		await runWrangler(`containers delete --json ${testContainerID}`);
 		expect(std.out).toMatchInlineSnapshot(
-			`"\\"{/\\"error/\\":/\\"Not Found/\\"}\\""`
+			`"{\\"error\\":\\"Not Found\\"}"`
 		);
 	});
 });

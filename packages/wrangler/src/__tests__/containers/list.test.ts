@@ -56,6 +56,66 @@ describe("containers list", () => {
 		);
 		expect(std.err).toMatchInlineSnapshot(`""`);
 		await runWrangler("containers list");
-		expect(std.out).toMatchInlineSnapshot(`"\\"[{/\\"id/\\":/\\"asdf-2/\\",/\\"created_at/\\":/\\"123/\\",/\\"account_id/\\":/\\"test-account/\\",/\\"name/\\":/\\"Test-app/\\",/\\"version/\\":1,/\\"configuration/\\":{/\\"image/\\":/\\"test-registry.cfdata.org/test-app:v1/\\",/\\"network/\\":{/\\"mode/\\":/\\"private/\\"}},/\\"scheduling_policy/\\":/\\"regional/\\",/\\"instances/\\":2,/\\"jobs/\\":false,/\\"constraints/\\":{/\\"region/\\":/\\"WNAM/\\"}},{/\\"id/\\":/\\"asdf-1/\\",/\\"created_at/\\":/\\"123/\\",/\\"account_id/\\":/\\"test-account/\\",/\\"name/\\":/\\"Test-app/\\",/\\"version/\\":1,/\\"configuration/\\":{/\\"image/\\":/\\"test-registry.cfdata.org/test-app:v10/\\",/\\"network/\\":{/\\"mode/\\":/\\"private/\\"}},/\\"scheduling_policy/\\":/\\"regional/\\",/\\"instances/\\":10,/\\"jobs/\\":false,/\\"constraints/\\":{/\\"region/\\":/\\"WNAM/\\"}},{/\\"id/\\":/\\"asdf-3/\\",/\\"created_at/\\":/\\"123/\\",/\\"account_id/\\":/\\"test-account/\\",/\\"name/\\":/\\"Test-app/\\",/\\"version/\\":1,/\\"configuration/\\":{/\\"image/\\":/\\"test-registry.cfdata.org/test-app:v2/\\",/\\"network/\\":{/\\"mode/\\":/\\"private/\\"}},/\\"scheduling_policy/\\":/\\"regional/\\",/\\"instances/\\":2,/\\"jobs/\\":false,/\\"constraints/\\":{/\\"region/\\":/\\"WNAM/\\"}}]\\""`);
+		expect(std.out).toMatchInlineSnapshot(`
+			"[
+			    {
+			        \\"id\\": \\"asdf-2\\",
+			        \\"created_at\\": \\"123\\",
+			        \\"account_id\\": \\"test-account\\",
+			        \\"name\\": \\"Test-app\\",
+			        \\"version\\": 1,
+			        \\"configuration\\": {
+			            \\"image\\": \\"test-registry.cfdata.org/test-app:v1\\",
+			            \\"network\\": {
+			                \\"mode\\": \\"private\\"
+			            }
+			        },
+			        \\"scheduling_policy\\": \\"regional\\",
+			        \\"instances\\": 2,
+			        \\"jobs\\": false,
+			        \\"constraints\\": {
+			            \\"region\\": \\"WNAM\\"
+			        }
+			    },
+			    {
+			        \\"id\\": \\"asdf-1\\",
+			        \\"created_at\\": \\"123\\",
+			        \\"account_id\\": \\"test-account\\",
+			        \\"name\\": \\"Test-app\\",
+			        \\"version\\": 1,
+			        \\"configuration\\": {
+			            \\"image\\": \\"test-registry.cfdata.org/test-app:v10\\",
+			            \\"network\\": {
+			                \\"mode\\": \\"private\\"
+			            }
+			        },
+			        \\"scheduling_policy\\": \\"regional\\",
+			        \\"instances\\": 10,
+			        \\"jobs\\": false,
+			        \\"constraints\\": {
+			            \\"region\\": \\"WNAM\\"
+			        }
+			    },
+			    {
+			        \\"id\\": \\"asdf-3\\",
+			        \\"created_at\\": \\"123\\",
+			        \\"account_id\\": \\"test-account\\",
+			        \\"name\\": \\"Test-app\\",
+			        \\"version\\": 1,
+			        \\"configuration\\": {
+			            \\"image\\": \\"test-registry.cfdata.org/test-app:v2\\",
+			            \\"network\\": {
+			                \\"mode\\": \\"private\\"
+			            }
+			        },
+			        \\"scheduling_policy\\": \\"regional\\",
+			        \\"instances\\": 2,
+			        \\"jobs\\": false,
+			        \\"constraints\\": {
+			            \\"region\\": \\"WNAM\\"
+			        }
+			    }
+			]"
+		`);
 	});
 });

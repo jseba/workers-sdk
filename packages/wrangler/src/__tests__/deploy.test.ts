@@ -22,7 +22,7 @@ import {
 import { clearOutputFilePath } from "../output";
 import { sniffUserAgent } from "../package-manager";
 import { writeAuthConfigFile } from "../user";
-import { mockAccount as mockContainersAccount } from "./cloudchamber/utils";
+import { mockAccountV4 as mockContainersAccount } from "./cloudchamber/utils";
 import { mockAccountId, mockApiToken } from "./helpers/mock-account-id";
 import { mockAuthDomain } from "./helpers/mock-auth-domain";
 import { mockConsoleMethods } from "./helpers/mock-console";
@@ -93,7 +93,7 @@ function mockGetApplications(applications: Application[]) {
 		http.get(
 			"*/applications",
 			async () => {
-				return HttpResponse.json(applications);
+				return HttpResponse.json({success: true, result: applications});
 			},
 			{ once: true }
 		)
@@ -8913,7 +8913,7 @@ addEventListener('fetch', event => {});`
 									expect(json).toMatchObject(expected);
 								}
 
-								return HttpResponse.json(json);
+								return HttpResponse.json({success: true, result: json});
 							},
 							{ once: true }
 						)
@@ -8929,12 +8929,12 @@ addEventListener('fetch', event => {});`
 									(await request.json()) as ImageRegistryCredentialsConfiguration;
 								expect(json.permissions).toEqual(["push", "pull"]);
 
-								return HttpResponse.json({
+								return HttpResponse.json({success: true, result: {
 									account_id: "test_account_id",
 									registry_host: getCloudflareContainerRegistry(),
 									username: "v1",
 									password: "mockpassword",
-								} as AccountRegistryToken);
+								} as AccountRegistryToken});
 							},
 							{ once: true }
 						)
@@ -9121,7 +9121,7 @@ addEventListener('fetch', event => {});`
 									expect(json).toMatchObject(expected);
 								}
 
-								return HttpResponse.json(json);
+								return HttpResponse.json({success: true, result: json});
 							},
 							{ once: true }
 						)
